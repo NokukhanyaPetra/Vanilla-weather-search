@@ -6,7 +6,7 @@ function refreshWeather(response) {
   let humidityElement = document.querySelector("#humidity");
   let windspeedElement = document.querySelector("#wind-speed");
   let timeElement = document.querySelector("#time");
-  let date = newDate(response.data.time * 1000);
+  let date = new Date(response.data.time * 1000);
   let iconElement = document.querySelector("#icon");
 
   cityElement.innerHTML = response.data.city;
@@ -20,7 +20,7 @@ function refreshWeather(response) {
 }
 
 function formatDate(date) {
-  let minutes = dat.getMinutes();
+  let minutes = date.getMinutes();
   let hours = date.getHours();
   let days = [
     "Sunday",
@@ -35,7 +35,7 @@ function formatDate(date) {
   if (minutes < 10) {
     minutes = `0${minutes}`;
   }
-  return `${day}:${minutes}`;
+  return `${day} ${hours}:${minutes}`;
 }
 function searchCity(city) {
   let apiKey = "f32bcobff3tf69a32a4c45cab6e111b0";
