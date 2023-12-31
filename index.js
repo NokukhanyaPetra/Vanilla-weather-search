@@ -17,6 +17,7 @@ function refreshWeather(response) {
 
   temperatureElement.innerHTML = Math.round(temperature);
   iconElement.innerHTML = `<img src="${response.data.condition.icon_url}" class="weather-app-icon" />`;
+  getForecost("response.data.city");
 }
 
 function formatDate(date) {
@@ -52,7 +53,7 @@ let searchformElement = document.querySelector("#search-form");
 searchformElement.addEventListener("submit", handlesubmitSearch);
 searchCity("Potchefstroom");
 
-function displayforecast() {
+function displayforecast(response) {
   let days = ["Mon", "Tues", "Wed", "Thurs", "Fri"];
   let forecastHtml = "";
 
@@ -76,3 +77,9 @@ function displayforecast() {
   forecastElement.innerHTML = forecastHtml;
 }
 displayforecast();
+
+function getForecost(city) {
+  apiKey = "f32bcobff3tf69a32a4c45cab6e111b0";
+  apiUrl = `https://api.shecodes.io/weather/v1/forecast?query=${apiUrl}&key=${apiKey}&units=metric`;
+  axios(apiUrl).then(displayforecast);
+}
