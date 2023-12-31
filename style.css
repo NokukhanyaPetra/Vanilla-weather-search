@@ -75,3 +75,18 @@ main {
   margin-top: 40px;
   font-size: 40px;
 }
+.weather-forecast {
+  margin: 20px;
+  text-align: center;
+}
+.week-dates {
+  font-size: 16px;
+  color: black;
+  opacity: 0.5;
+}
+.weather-forecast-temperature {
+  font-size: 13px;
+}
+.forecast-min-temparature {
+  opacity: 0.5;
+}
