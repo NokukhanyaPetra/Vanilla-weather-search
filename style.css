@@ -90,3 +90,9 @@ main {
 .forecast-min-temparature {
   opacity: 0.5;
 }
+.weather-forecast-icon {
+  width: 88px;
+  height: 38px;
+  display: block;
+  margin: 0 auto;
+}

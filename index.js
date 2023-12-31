@@ -2,7 +2,7 @@ function refreshWeather(response) {
   let temperatureElement = document.querySelector("#temperature");
   let temperature = response.data.temperature.current;
   let cityElement = document.querySelector("#city");
-  let discriptionElement = document.querySelector("#discription");
+  let descriptionElement = document.querySelector("#description");
   let humidityElement = document.querySelector("#humidity");
   let windspeedElement = document.querySelector("#wind-speed");
   let timeElement = document.querySelector("#time");
@@ -10,14 +10,15 @@ function refreshWeather(response) {
   let iconElement = document.querySelector("#icon");
 
   cityElement.innerHTML = response.data.city;
-  discriptionElement.innerHTML = response.data.condition.description;
+  descriptionElement.innerHTML = response.data.condition.description;
   humidityElement.innerHTML = `${response.data.temperature.humidity}%`;
   windspeedElement.innerHTML = `${response.data.wind.speed}km/h`;
   timeElement.innerHTML = formatDate(date);
 
   temperatureElement.innerHTML = Math.round(temperature);
   iconElement.innerHTML = `<img src="${response.data.condition.icon_url}" class="weather-app-icon" />`;
-  getForecost("response.data.city");
+
+  getForecast(response.data.city);
 }
 
 function formatDate(date) {
@@ -45,41 +46,48 @@ function searchCity(city) {
 }
 function handlesubmitSearch(event) {
   event.preventDefault();
-  let cityPlace = document.querySelector("#city-info");
+  let cityPlace = document.querySelector("#city");
   searchCity(cityPlace.value);
 }
+function formatDay(timestamp) {
+  let date = new Date(timestamp * 1000);
+  let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-let searchformElement = document.querySelector("#search-form");
-searchformElement.addEventListener("submit", handlesubmitSearch);
-searchCity("Potchefstroom");
-
-function displayforecast(response) {
-  let days = ["Mon", "Tues", "Wed", "Thurs", "Fri"];
+  return days[date.getDay()];
+}
+function getForecast(city) {
+  let apiKey = "f32bcobff3tf69a32a4c45cab6e111b0";
+  let apiUrl = `https://api.shecodes.io/weather/v1/forecast?query=${city}&key=${apiKey}&units=metric`;
+  axios.get(apiUrl).then(displayForecast);
+}
+function displayForecast(response) {
   let forecastHtml = "";
 
-  days.forEach(function (day) {
-    forecastHtml =
-      forecastHtml +
-      `
-     <div class="weather-forecast-day">
-        <div class="weather-forecast-date">${day}</div>
-        <div class="weather-forecast-icon">🌤️</div>
+  response.data.daily.forEach(function (day, index) {
+    if (index < 5) {
+      forecastHtml =
+        forecastHtml +
+        `
+       <div class="weather-forecast-day">
+        <div class="weather-forecast-date">${formatDay(day.time)}</div>
+
+        <img src="${day.condition.icon_url}" class="weather-forecast-icon" />
         <div class="weather-forecast-temperatures">
           <div class="weather-forecast-temperature">
-            <strong>15º</strong>
+            <strong>${Math.round(day.temperature.maximum)}º</strong>
           </div>
-          <div class="weather-forecast-temperature">9º</div>
+          <div class="weather-forecast-temperature">${Math.round(
+            day.temperature.minimum
+          )}º</div>
         </div>
       </div>
-`;
+    `;
+    }
   });
   let forecastElement = document.querySelector("#forecast");
   forecastElement.innerHTML = forecastHtml;
 }
-displayforecast();
+let searchformElement = document.querySelector("#search-form");
+searchformElement.addEventListener("submit", handlesubmitSearch);
 
-function getForecost(city) {
-  apiKey = "f32bcobff3tf69a32a4c45cab6e111b0";
-  apiUrl = `https://api.shecodes.io/weather/v1/forecast?query=${apiUrl}&key=${apiKey}&units=metric`;
-  axios(apiUrl).then(displayforecast);
-}
+searchCity("Potchefstroom");
